@@ -1,22 +1,33 @@
-const mongoose=require("mongoose");
-const Listing=require("../models/listing.js");
-const initdata =require("./data.js");
+require("dotenv").config();
 
-main().then(()=>{
-    console.log("connected to DB");
+const mongoose = require("mongoose");
+const Listing = require("../models/listing.js");
+const initdata = require("./data.js");
+
+async function main() {
+    await mongoose.connect(process.env.ATLASDB_URL);
+}
+
+main()
+.then(() => {
+    console.log("Connected to Atlas");
 })
-.catch((err)=>{
+.catch((err) => {
     console.log(err);
-})
+});
 
-async function main(){
-    await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
-}
-
-const initDB = async()=>{
+const initDB = async () => {
     await Listing.deleteMany({});
-    initdata.data=initdata.data.map((obj)=>({...obj,owner:"6a1058ef57f36de3dd2f8dc8"}));
-    await Listing.insertMany(initdata.data);
-    console.log("data initialized");
-}
+
+    const dataWithOwner = initdata.data.map((obj) => ({
+        ...obj,
+        owner: "6a26c82f766f81745ccd5c0a"
+    }));
+
+    await Listing.insertMany(dataWithOwner);
+
+    console.log("Data Initialized");
+};
+
 initDB();
+
