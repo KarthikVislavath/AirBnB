@@ -115,6 +115,8 @@ app.use((err, req, res, next) => {
     //   res.status(status).send(message);
 });
 
-app.listen(8000, () => {
-    console.log("app is working on 8000 port")
-})
+const port = process.env.PORT || 8000;
+
+app.listen(port, () => {
+    console.log(`app is working on ${port} port`);
+});
